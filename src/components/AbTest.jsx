@@ -11,8 +11,8 @@ export default function AbTest({ groups, title = 'Quel message gagne ?' }) {
       <div className="panel-head" style={{ padding: '0 2px 16px', border: 0 }}>
         <h3 className="panel-title">{title}</h3>
         <p className="panel-note">
-          Comparaison des messages testés. Le gagnant est désigné sur les
-          inscriptions (à défaut, le taux de clic).
+          Comparaison des messages testés. Le gagnant est désigné sur les clics
+          « S’inscrire » (à défaut, le taux de clic).
         </p>
       </div>
       <div className="ab-wrap">
@@ -29,7 +29,7 @@ function AbCard({ group, isWinner }) {
     { label: 'Impressions', value: fmtInt(group.imp) },
     { label: 'Clics', value: fmtInt(group.clk) },
     { label: 'CTR', value: fmtPct(ctr(group.imp, group.clk), 2) },
-    { label: 'Conversions', value: fmtInt(group.conv) },
+    { label: 'Clics « S’inscrire »', value: fmtInt(group.conv) },
   ]
   return (
     <div className={`ab-card ${isWinner ? 'winner' : ''}`}>

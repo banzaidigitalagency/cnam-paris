@@ -37,7 +37,7 @@ export default function KpiRow({ block }) {
       spark: 'ctr',
     },
     {
-      label: 'Conversions (inscriptions)',
+      label: 'Clics « S’inscrire »',
       value: fmtInt(cur.conv),
       delta: noPrev ? null : pctChange(cur.conv, prev.conv),
       spark: 'conv',

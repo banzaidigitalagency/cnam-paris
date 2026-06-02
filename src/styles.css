@@ -198,6 +198,10 @@ body {
   align-items: end;
   padding: 48px 0 36px;
 }
+.hero.hero-solo {
+  display: block;
+  padding: 48px 0 32px;
+}
 .hero-sync {
   display: inline-flex;
   align-items: center;

@@ -47,7 +47,7 @@ export function buildInsights(data) {
       const w = groups.find((g) => g.label === winner)
       const detail =
         (w.conv || 0) > 0
-          ? `${fmtInt(w.conv)} inscriptions générées`
+          ? `${fmtInt(w.conv)} clics « S’inscrire »`
           : `meilleur taux d'engagement (CTR ${fmtPct(ctr(w.imp, w.clk), 2)})`
       insights.push({
         kind: 'message',
@@ -89,8 +89,8 @@ export function buildInsights(data) {
   if (totalConv > 0) {
     insights.push({
       kind: 'conv',
-      title: 'Les inscriptions sont lancées',
-      body: `${fmtInt(totalConv)} inscriptions déjà attribuées aux campagnes média sur la période — la dynamique est enclenchée.`,
+      title: 'Les premiers clics « S’inscrire »',
+      body: `${fmtInt(totalConv)} clics sur le bouton « S’inscrire » déjà enregistrés sur la période — la dynamique est enclenchée.`,
     })
   }
 
@@ -140,7 +140,7 @@ function buildNextAction(data, copyScores) {
   }
   // Programmatique présente -> suggérer le retargeting des audiences exposées.
   if (data?.dv360?.current?.imp) {
-    return 'Activer un retargeting des audiences exposées en programmatique pour transformer la notoriété acquise en inscriptions.'
+    return 'Activer un retargeting des audiences exposées en programmatique pour transformer la notoriété acquise en clics vers l’inscription.'
   }
   return 'Laisser les campagnes accumuler de la donnée sur les prochains jours, puis renforcer les formats les plus engageants.'
 }

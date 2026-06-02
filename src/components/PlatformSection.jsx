@@ -66,7 +66,7 @@ function PlatformKpiStrip({ block, simple }) {
         { label: 'Impressions', value: fmtInt(cur.imp) },
         { label: 'Clics', value: fmtInt(cur.clk) },
         { label: 'CTR', value: fmtPct(ctr(cur.imp, cur.clk), 2) },
-        { label: 'Conversions (inscriptions)', value: fmtInt(cur.conv) },
+        { label: 'Clics « S’inscrire »', value: fmtInt(cur.conv) },
       ]
   return (
     <div className="kpi-strip">
