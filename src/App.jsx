@@ -19,7 +19,7 @@ import QuickRead from './components/QuickRead.jsx'
 import Footer from './components/Footer.jsx'
 
 // Date de lancement de la campagne (utilisée pour le preset "Depuis le lancement").
-const LAUNCH_DATE = '2026-06-02'
+const LAUNCH_DATE = '2026-06-01'
 
 function daysAgoISO(n) {
   const d = new Date()
