@@ -135,7 +135,7 @@ function buildNextAction(data, copyScores) {
     }))
     const winner = pickWinner(groups)
     if (winner) {
-      return `Capitaliser sur le message « ${winner} » en lui réallouant progressivement du budget, tout en gardant une variante en test pour continuer d'apprendre.`
+      return `Capitaliser sur le message « ${winner} » en lui donnant plus de place dans la diffusion, tout en gardant une variante en test pour continuer d'apprendre.`
     }
   }
   // Programmatique présente -> suggérer le retargeting des audiences exposées.

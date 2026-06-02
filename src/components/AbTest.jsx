@@ -1,5 +1,5 @@
-import { fmtInt, fmtPct, fmtEur } from '../lib/format.js'
-import { ctr, cpa, pickWinner } from '../lib/derive.js'
+import { fmtInt, fmtPct } from '../lib/format.js'
+import { ctr, pickWinner } from '../lib/derive.js'
 
 // Bloc A/B "Quel message gagne ?" — compare 2 ad copies, gagnant mis en avant.
 export default function AbTest({ groups, title = 'Quel message gagne ?' }) {
@@ -30,7 +30,6 @@ function AbCard({ group, isWinner }) {
     { label: 'Clics', value: fmtInt(group.clk) },
     { label: 'CTR', value: fmtPct(ctr(group.imp, group.clk), 2) },
     { label: 'Conversions', value: fmtInt(group.conv) },
-    { label: 'CPA', value: fmtEur(cpa(group.spend, group.conv), 2) },
   ]
   return (
     <div className={`ab-card ${isWinner ? 'winner' : ''}`}>

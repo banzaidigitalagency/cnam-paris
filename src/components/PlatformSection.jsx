@@ -1,5 +1,5 @@
-import { fmtInt, fmtPct, fmtEur } from '../lib/format.js'
-import { ctr, cpa } from '../lib/derive.js'
+import { fmtInt, fmtPct } from '../lib/format.js'
+import { ctr } from '../lib/derive.js'
 
 // En-tête de section + état vide gracieux + bandeau de KPI plateforme.
 export default function PlatformSection({
@@ -8,7 +8,6 @@ export default function PlatformSection({
   subtitle,
   present,
   block,
-  showSpend = false,
   simple = false,
   children,
 }) {
@@ -24,7 +23,7 @@ export default function PlatformSection({
         <EmptyState />
       ) : (
         <>
-          <PlatformKpiStrip block={block} showSpend={showSpend} simple={simple} />
+          <PlatformKpiStrip block={block} simple={simple} />
           <div className="stack">{children}</div>
         </>
       )}
@@ -54,9 +53,9 @@ export function EmptyState({
   )
 }
 
-function PlatformKpiStrip({ block, showSpend, simple }) {
+function PlatformKpiStrip({ block, simple }) {
   const cur = block.current || {}
-  // Prog (simple): stats simples uniquement — impressions, clics, CTR.
+  // Prog (simple): impressions, clics, CTR. Sinon on ajoute les conversions.
   const cards = simple
     ? [
         { label: 'Impressions', value: fmtInt(cur.imp) },
@@ -68,10 +67,6 @@ function PlatformKpiStrip({ block, showSpend, simple }) {
         { label: 'Clics', value: fmtInt(cur.clk) },
         { label: 'CTR', value: fmtPct(ctr(cur.imp, cur.clk), 2) },
         { label: 'Conversions (inscriptions)', value: fmtInt(cur.conv) },
-        {
-          label: showSpend ? 'CPA' : 'Coût',
-          value: showSpend ? fmtEur(cpa(cur.spend, cur.conv), 2) : fmtEur(cur.spend, 2),
-        },
       ]
   return (
     <div className="kpi-strip">

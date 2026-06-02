@@ -1,14 +1,13 @@
 import Sparkline from './Sparkline.jsx'
 import {
   fmtInt,
-  fmtEur,
   fmtPct,
   pctChange,
   fmtDelta,
 } from '../lib/format.js'
-import { ctr, cpa, isAllZero } from '../lib/derive.js'
+import { ctr, isAllZero } from '../lib/derive.js'
 
-// Ligne de KPI globaux : Impressions, Clics, CTR, Conversions, Coût, CPA.
+// Ligne de KPI globaux : Impressions, Clics, CTR, Conversions.
 export default function KpiRow({ block }) {
   if (!block) return null
   const cur = block.current || {}
@@ -17,8 +16,6 @@ export default function KpiRow({ block }) {
 
   const curCtr = ctr(cur.imp, cur.clk)
   const prevCtr = ctr(prev.imp, prev.clk)
-  const curCpa = cpa(cur.spend, cur.conv)
-  const prevCpa = cpa(prev.spend, prev.conv)
 
   const cards = [
     {
@@ -44,20 +41,6 @@ export default function KpiRow({ block }) {
       value: fmtInt(cur.conv),
       delta: noPrev ? null : pctChange(cur.conv, prev.conv),
       spark: 'conv',
-    },
-    {
-      label: 'Coût',
-      value: fmtEur(cur.spend, 2),
-      delta: noPrev ? null : pctChange(cur.spend, prev.spend),
-      spark: 'spend',
-      // pour le coût, hausse = plus d'investissement, on garde neutre via invert
-      invert: true,
-    },
-    {
-      label: 'CPA',
-      value: fmtEur(curCpa, 2),
-      delta: noPrev ? null : pctChange(curCpa, prevCpa),
-      invert: true,
     },
   ]
 

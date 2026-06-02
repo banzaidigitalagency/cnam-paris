@@ -1,4 +1,4 @@
-import { fmtEur, fmtDateFR, pctChange, fmtDelta, hoursSince } from '../lib/format.js'
+import { fmtInt, fmtDateFR, pctChange, fmtDelta, hoursSince } from '../lib/format.js'
 import { isAllZero } from '../lib/derive.js'
 
 export default function Hero({ metaInfo, global, start, end }) {
@@ -10,10 +10,10 @@ export default function Hero({ metaInfo, global, start, end }) {
       ? 'Données mises à jour il y a moins d’une heure'
       : `Données mises à jour il y a ${h} h`
 
-  const spend = global?.current?.spend ?? 0
-  const prevSpend = global?.previous?.spend
+  const conv = global?.current?.conv ?? 0
+  const prevConv = global?.previous?.conv
   const noPrev = isAllZero(global?.previous)
-  const delta = noPrev ? null : pctChange(spend, prevSpend)
+  const delta = noPrev ? null : pctChange(conv, prevConv)
 
   return (
     <section className="hero">
@@ -34,8 +34,8 @@ export default function Hero({ metaInfo, global, start, end }) {
       </div>
 
       <div className="hero-card">
-        <div className="hc-label">Investissement média total</div>
-        <div className="hc-value tnum">{fmtEur(spend, 2)}</div>
+        <div className="hc-label">Inscriptions générées</div>
+        <div className="hc-value tnum">{fmtInt(conv)}</div>
         <div className="hc-delta">
           {noPrev ? 'Première période de référence' : `${fmtDelta(delta)} vs période précédente`}
         </div>

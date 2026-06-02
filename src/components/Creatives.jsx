@@ -1,4 +1,4 @@
-import { fmtInt, fmtPct, fmtEur } from '../lib/format.js'
+import { fmtInt, fmtPct } from '../lib/format.js'
 import { ctr } from '../lib/derive.js'
 
 // Tableau des meilleures créations (annonces) d'une plateforme.
@@ -20,7 +20,6 @@ export default function Creatives({ creatives, showConv = true }) {
             <th>Clics</th>
             <th>CTR</th>
             {showConv ? <th>Conversions</th> : null}
-            <th>Coût</th>
           </tr>
         </thead>
         <tbody>
@@ -31,7 +30,6 @@ export default function Creatives({ creatives, showConv = true }) {
               <td className="tnum">{fmtInt(c.clk)}</td>
               <td className="tnum">{fmtPct(c.ctr != null ? c.ctr : ctr(c.imp, c.clk), 2)}</td>
               {showConv ? <td className="tnum">{fmtInt(c.conv)}</td> : null}
-              <td className="tnum">{fmtEur(c.spend, 2)}</td>
             </tr>
           ))}
         </tbody>
