@@ -175,19 +175,11 @@ body {
 }
 
 /* ---------- Logo ---------- */
-.logo-tile {
+.logo-tile-img {
   border-radius: 13px;
-  background: var(--brand-red);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  object-fit: cover;
+  display: block;
   box-shadow: 0 4px 14px rgba(226, 0, 26, 0.28);
-}
-.logo-tile .l-text {
-  font-family: var(--display);
-  color: #fff;
-  letter-spacing: -0.03em;
-  line-height: 1;
 }
 
 /* ---------- Hero ---------- */
