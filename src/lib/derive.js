@@ -42,6 +42,17 @@ export function extractQuoted(name) {
   return m ? m[1].trim() : null
 }
 
+// Clé de regroupement insensible aux accents / à la casse / aux espaces,
+// pour que « ET SI C'ÉTAIT » et « ET SI C'ETAIT » soient comptés comme un seul message.
+export function normalizeKey(label) {
+  return (label || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 // --- META : libellé d'ad copy = texte entre guillemets, sinon nom complet ---
 export function metaAdCopyLabel(name) {
   return extractQuoted(name) || (name || '').trim() || 'Annonce'
@@ -49,17 +60,7 @@ export function metaAdCopyLabel(name) {
 
 // Regroupe les adSets Meta par ad copy -> [{label, imp, clk, spend, conv}].
 export function metaAdCopies(adSets) {
-  const groups = new Map()
-  for (const a of adSets || []) {
-    const label = metaAdCopyLabel(a.name)
-    const g = groups.get(label) || { label, imp: 0, clk: 0, spend: 0, conv: 0 }
-    g.imp += a.imp || 0
-    g.clk += a.clk || 0
-    g.spend += a.spend || 0
-    g.conv += a.conv || 0
-    groups.set(label, g)
-  }
-  return [...groups.values()]
+  return groupBy(adSets, metaAdCopyLabel)
 }
 
 // --- LINKEDIN : parse format + ad copy depuis le nom de l'ad set ---
@@ -83,12 +84,14 @@ function groupBy(adSets, keyFn) {
   const groups = new Map()
   for (const a of adSets || []) {
     const label = keyFn(a.name)
-    const g = groups.get(label) || { label, imp: 0, clk: 0, spend: 0, conv: 0 }
+    // Regroupe sur une clé normalisée (accents/casse) mais affiche le 1er libellé vu.
+    const key = normalizeKey(label)
+    const g = groups.get(key) || { label, imp: 0, clk: 0, spend: 0, conv: 0 }
     g.imp += a.imp || 0
     g.clk += a.clk || 0
     g.spend += a.spend || 0
     g.conv += a.conv || 0
-    groups.set(label, g)
+    groups.set(key, g)
   }
   return [...groups.values()]
 }
