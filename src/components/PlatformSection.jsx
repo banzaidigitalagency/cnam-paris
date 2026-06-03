@@ -1,9 +1,11 @@
 import { fmtInt, fmtPct } from '../lib/format.js'
 import { ctr } from '../lib/derive.js'
+import PlatformLogo from './PlatformLogo.jsx'
 
 // En-tête de section + état vide gracieux + bandeau de KPI plateforme.
 export default function PlatformSection({
   index,
+  logo,
   title,
   subtitle,
   present,
@@ -14,7 +16,11 @@ export default function PlatformSection({
   return (
     <section className="section">
       <div className="section-head">
-        <span className="section-index">/{index}</span>
+        {logo ? (
+          <PlatformLogo name={logo} />
+        ) : (
+          <span className="section-index">/{index}</span>
+        )}
         <h2 className="section-title">{title}</h2>
         {subtitle ? <span className="section-sub">{subtitle}</span> : null}
       </div>

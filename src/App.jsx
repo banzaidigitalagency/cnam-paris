@@ -148,6 +148,7 @@ export default function App() {
             {/* /01 Meta */}
             <PlatformSection
               index="01"
+              logo="meta"
               title="Meta"
               subtitle="Facebook · Instagram"
               present={present.meta}
@@ -160,6 +161,7 @@ export default function App() {
             {/* /02 LinkedIn */}
             <PlatformSection
               index="02"
+              logo="linkedin"
               title="LinkedIn"
               subtitle="Campagnes sponsorisées"
               present={present.linkedin}
@@ -173,6 +175,7 @@ export default function App() {
             {/* /03 Programmatique */}
             <PlatformSection
               index="03"
+              logo="prog"
               title="Programmatique"
               subtitle="DV360 · Display & Vidéo"
               present={present.dv360}
