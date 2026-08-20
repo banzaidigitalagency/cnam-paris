@@ -13,11 +13,11 @@ export function isDemoMode() {
   return false
 }
 
-export async function fetchDashboard({ start, end }) {
+export async function fetchDashboard({ start, end, wave }) {
   if (isDemoMode()) {
     // Latence simulée pour exercer l'état de chargement.
     await new Promise((r) => setTimeout(r, 250))
-    return demoData({ start, end })
+    return demoData({ start, end, wave })
   }
 
   if (!API_URL) {
@@ -27,6 +27,7 @@ export async function fetchDashboard({ start, end }) {
   const url = new URL(API_URL)
   if (start) url.searchParams.set('start', start)
   if (end) url.searchParams.set('end', end)
+  if (wave) url.searchParams.set('wave', wave)
 
   const res = await fetch(url.toString(), {
     headers: { Accept: 'application/json' },

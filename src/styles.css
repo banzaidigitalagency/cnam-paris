@@ -174,6 +174,52 @@ body {
   border-color: var(--ink);
 }
 
+/* ---------- Onglets de vague ---------- */
+.wave-tabs {
+  display: flex;
+  gap: 6px;
+  padding-top: 26px;
+  border-bottom: 1px solid var(--hairline-strong);
+}
+.wave-tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  padding: 8px 18px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  transition: border-color 0.15s ease;
+}
+.wave-tab .wt-label {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.015em;
+  color: var(--muted);
+  transition: color 0.15s ease;
+}
+.wave-tab .wt-period {
+  font-size: 11.5px;
+  color: var(--muted-2);
+}
+.wave-tab:hover .wt-label {
+  color: var(--ink);
+}
+.wave-tab.active {
+  border-bottom-color: var(--brand-red);
+}
+.wave-tab.active .wt-label {
+  color: var(--ink);
+}
+.wave-tab.active .wt-period {
+  color: var(--brand-red);
+}
+
 /* ---------- Logo ---------- */
 .logo-tile-img {
   border-radius: 13px;
@@ -666,6 +712,12 @@ body {
   .section-sub {
     display: none;
   }
+  .wave-tab {
+    padding: 8px 14px 10px;
+  }
+  .wave-tab .wt-period {
+    display: none;
+  }
 }
 
 /* ---------- Print ---------- */
@@ -682,6 +734,18 @@ body {
   .topbar {
     position: static;
     backdrop-filter: none;
+  }
+  /* À l'impression, seule la vague affichée reste (comme un titre de rapport). */
+  .wave-tab:not(.active) {
+    display: none !important;
+  }
+  .wave-tabs {
+    border-bottom: none;
+    padding-top: 8px;
+  }
+  .wave-tab {
+    border-bottom: none;
+    padding-left: 0;
   }
   .kpi-card,
   .panel,

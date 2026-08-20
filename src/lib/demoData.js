@@ -51,7 +51,9 @@ function withPrevious(current) {
   }
 }
 
-export function demoData({ start, end }) {
+export function demoData({ start, end, wave = 'rentree' }) {
+  // La vague juin a 3 lignes prog (avec Outstream) ; la rentrée en a 2.
+  const isJuin = wave === 'juin'
   // Plage par défaut : ~14 jours si non fournie.
   let s = start
   let e = end
@@ -147,16 +149,28 @@ export function demoData({ start, end }) {
   }
 
   // ---------- DV360 ----------
-  const dvAdSets = [
-    { name: 'LI — IAB Interstitiel Display', imp: 84200, clk: 168, spend: 412.0, conv: 0 },
-    { name: 'LI — Outstream Vidéo', imp: 61500, clk: 92, spend: 338.5, conv: 0 },
-    { name: 'LI — YouTube Bumper', imp: 47800, clk: 61, spend: 286.2, conv: 0 },
-  ].map((a) => ({ ...a, ctr: ctr(a.imp, a.clk) ?? 0 }))
-  const dvCreatives = [
-    { name: 'Display 300x250 — Et si c\'était le moment', imp: 52100, clk: 104, spend: 251.3, conv: 0 },
-    { name: 'Outstream 16:9 — Campus', imp: 41200, clk: 61, spend: 226.8, conv: 0 },
-    { name: 'YouTube Bumper 6s — Inscriptions', imp: 33600, clk: 44, spend: 198.4, conv: 0 },
-  ].map((c) => ({ ...c, ctr: ctr(c.imp, c.clk) ?? 0 }))
+  const dvAdSets = (isJuin
+    ? [
+        { name: 'LI — IAB Interstitiel Display', imp: 84200, clk: 168, spend: 412.0, conv: 0 },
+        { name: 'LI — Outstream Vidéo', imp: 61500, clk: 92, spend: 338.5, conv: 0 },
+        { name: 'LI — YouTube Bumper', imp: 47800, clk: 61, spend: 286.2, conv: 0 },
+      ]
+    : [
+        { name: 'IAB / INTERSTITIEL', imp: 84200, clk: 168, spend: 412.0, conv: 0 },
+        { name: 'YOUTUBE', imp: 47800, clk: 61, spend: 286.2, conv: 0 },
+      ]
+  ).map((a) => ({ ...a, ctr: ctr(a.imp, a.clk) ?? 0 }))
+  const dvCreatives = (isJuin
+    ? [
+        { name: 'Display 300x250 — Et si c\'était le moment', imp: 52100, clk: 104, spend: 251.3, conv: 0 },
+        { name: 'Outstream 16:9 — Campus', imp: 41200, clk: 61, spend: 226.8, conv: 0 },
+        { name: 'YouTube Bumper 6s — Inscriptions', imp: 33600, clk: 44, spend: 198.4, conv: 0 },
+      ]
+    : [
+        { name: 'Display 300x250 — Et si c\'était le moment', imp: 52100, clk: 104, spend: 251.3, conv: 0 },
+        { name: 'YouTube Bumper 6s — Inscriptions', imp: 33600, clk: 44, spend: 198.4, conv: 0 },
+      ]
+  ).map((c) => ({ ...c, ctr: ctr(c.imp, c.clk) ?? 0 }))
   const dvCurrent = sumRows(dvAdSets)
   const dv360 = {
     current: dvCurrent,
@@ -191,6 +205,7 @@ export function demoData({ start, end }) {
 
   return {
     meta_info: {
+      wave: isJuin ? 'juin' : 'rentree',
       min_date: range.dates[0],
       max_date: range.dates[range.dates.length - 1],
       last_sync: lastSync.toISOString(),

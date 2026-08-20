@@ -104,7 +104,7 @@ export function linkedinByAdCopy(adSets) {
   return groupBy(adSets, linkedinAdCopyLabel)
 }
 
-// --- DV360 : mappe chaque line item vers une des 3 lignes ---
+// --- DV360 : mappe chaque line item vers une des lignes canoniques ---
 export function dv360Line(name) {
   const n = name || ''
   if (/iab|interstitiel/i.test(n)) return 'IAB / Interstitiel'
@@ -113,11 +113,14 @@ export function dv360Line(name) {
   return n.trim() || 'Ligne'
 }
 
-export function dv360Lines(adSets) {
-  const order = ['IAB / Interstitiel', 'Outstream', 'YouTube']
+// Lignes par défaut (vague juin) ; chaque vague passe les siennes.
+const DV360_DEFAULT_LINES = ['IAB / Interstitiel', 'Outstream', 'YouTube']
+
+export function dv360Lines(adSets, canonical = DV360_DEFAULT_LINES) {
+  const order = canonical
   const groups = new Map()
-  // Toujours présenter les 3 lignes canoniques, même à 0 (ex. YouTube pas encore
-  // diffusée) — le RPC masque les lignes à 0 impression, on les ré-affiche ici.
+  // Toujours présenter les lignes programmées sur la vague, même à 0 (ex. pas
+  // encore diffusée) — le RPC masque les lignes à 0 impression, on les ré-affiche ici.
   for (const label of order) groups.set(label, { label, imp: 0, clk: 0 })
   for (const a of adSets || []) {
     const label = dv360Line(a.name)

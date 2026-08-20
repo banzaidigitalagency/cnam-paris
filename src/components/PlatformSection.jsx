@@ -1,5 +1,5 @@
 import { fmtInt, fmtPct } from '../lib/format.js'
-import { ctr } from '../lib/derive.js'
+import { ctr, isAllZero } from '../lib/derive.js'
 import PlatformLogo from './PlatformLogo.jsx'
 
 // En-tête de section + état vide gracieux + bandeau de KPI plateforme.
@@ -25,7 +25,7 @@ export default function PlatformSection({
         {subtitle ? <span className="section-sub">{subtitle}</span> : null}
       </div>
 
-      {!present || !block ? (
+      {!present || !block || isAllZero(block.current) ? (
         <EmptyState />
       ) : (
         <>

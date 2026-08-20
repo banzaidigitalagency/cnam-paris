@@ -1,9 +1,10 @@
 import { fmtInt, fmtPct } from '../lib/format.js'
 import { ctr, dv360Lines } from '../lib/derive.js'
 
-// Tableau des 3 lignes programmatiques (impressions, clics, CTR — pas de coût/conv).
-export default function ProgLines({ adSets }) {
-  const lines = dv360Lines(adSets)
+// Tableau des lignes programmatiques de la vague (impressions, clics, CTR —
+// pas de coût/conv). `lines` = lignes canoniques de la vague affichée.
+export default function ProgLines({ adSets, lines: canonical }) {
+  const lines = dv360Lines(adSets, canonical || undefined)
   if (!lines || lines.length === 0) return null
 
   return (

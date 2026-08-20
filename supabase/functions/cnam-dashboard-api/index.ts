@@ -17,6 +17,8 @@ Deno.serve(async (req: Request) => {
     const url = new URL(req.url)
     let start = url.searchParams.get('start')
     let end = url.searchParams.get('end')
+    // Vague servie : 'juin' par défaut (rétro-compatible avec l'ancien front).
+    const wave = url.searchParams.get('wave') ?? 'juin'
 
     const today = new Date()
     if (!end) end = isoDate(today)
@@ -34,6 +36,13 @@ Deno.serve(async (req: Request) => {
       })
     }
 
+    if (wave !== 'juin' && wave !== 'rentree') {
+      return new Response(JSON.stringify({ error: 'invalid_wave' }), {
+        status: 400,
+        headers: { ...cors, 'Content-Type': 'application/json' },
+      })
+    }
+
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
@@ -42,6 +51,7 @@ Deno.serve(async (req: Request) => {
     const { data, error } = await supabase.rpc('cnam_dashboard_payload', {
       p_start: start,
       p_end: end,
+      p_wave: wave,
     })
 
     if (error) {

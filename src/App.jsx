@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { fetchDashboard } from './lib/api.js'
 import { toISODate, parseISO } from './lib/format.js'
+import { DEFAULT_WAVE_ID, getWave } from './lib/waves.js'
 import {
   metaAdCopies,
   linkedinByAdCopy,
@@ -8,6 +9,7 @@ import {
 } from './lib/derive.js'
 
 import TopBar from './components/TopBar.jsx'
+import WaveTabs from './components/WaveTabs.jsx'
 import Hero from './components/Hero.jsx'
 import KpiRow from './components/KpiRow.jsx'
 import PlatformSection from './components/PlatformSection.jsx'
@@ -18,25 +20,33 @@ import ProgLines from './components/ProgLines.jsx'
 import QuickRead from './components/QuickRead.jsx'
 import Footer from './components/Footer.jsx'
 
-// Date de lancement de la campagne (utilisée pour le preset "Depuis le lancement").
-const LAUNCH_DATE = '2026-06-01'
-
-function daysAgoISO(n) {
-  const d = new Date()
-  d.setDate(d.getDate() - n)
+// Décale une date ISO (YYYY-MM-DD) de n jours.
+function addDaysISO(iso, n) {
+  const d = parseISO(iso)
+  d.setDate(d.getDate() + n)
   return toISODate(d)
 }
 
-function rangeForPreset(preset) {
+// Plage d'un preset, bornée à la vague : les presets relatifs (7 j / 30 j)
+// sont calés sur aujourd'hui plafonné à la fin de vague (utile pour la vague
+// juin, terminée), et « Depuis le lancement » part du lancement de la vague.
+function rangeForPreset(preset, wave) {
   const today = toISODate(new Date())
-  if (preset === '7j') return { start: daysAgoISO(6), end: today }
-  if (preset === '30j') return { start: daysAgoISO(29), end: today }
-  return { start: LAUNCH_DATE, end: today } // launch
+  let end = wave.end && today > wave.end ? wave.end : today
+  let start
+  if (preset === '7j') start = addDaysISO(end, -6)
+  else if (preset === '30j') start = addDaysISO(end, -29)
+  else start = wave.launch // launch
+  if (end < start) end = start // vague pas encore lancée
+  return { start, end }
 }
 
 export default function App() {
+  const [waveId, setWaveId] = useState(DEFAULT_WAVE_ID)
+  const wave = getWave(waveId)
+
   const [preset, setPreset] = useState('launch')
-  const initial = rangeForPreset('launch')
+  const initial = rangeForPreset('launch', getWave(DEFAULT_WAVE_ID))
   const [start, setStart] = useState(initial.start)
   const [end, setEnd] = useState(initial.end)
 
@@ -47,7 +57,17 @@ export default function App() {
   // Application d'un preset -> recalcule les dates.
   function applyPreset(p) {
     setPreset(p)
-    const r = rangeForPreset(p)
+    const r = rangeForPreset(p, wave)
+    setStart(r.start)
+    setEnd(r.end)
+  }
+
+  // Changement de vague -> retour au preset « Depuis le lancement » de la vague.
+  function applyWave(id) {
+    if (id === waveId) return
+    setWaveId(id)
+    setPreset('launch')
+    const r = rangeForPreset('launch', getWave(id))
     setStart(r.start)
     setEnd(r.end)
   }
@@ -66,7 +86,7 @@ export default function App() {
     let cancelled = false
     setLoading(true)
     setError(null)
-    fetchDashboard({ start, end })
+    fetchDashboard({ start, end, wave: waveId })
       .then((d) => {
         if (!cancelled) setData(d)
       })
@@ -79,7 +99,7 @@ export default function App() {
     return () => {
       cancelled = true
     }
-  }, [start, end])
+  }, [start, end, waveId])
 
   const present = data?.meta_info?.platforms_present || {}
 
@@ -113,6 +133,8 @@ export default function App() {
       />
 
       <main className="shell">
+        <WaveTabs waveId={waveId} onWave={applyWave} />
+
         {loading ? (
           <div className="center-screen">
             <div className="spinner" />
@@ -177,12 +199,12 @@ export default function App() {
               index="03"
               logo="prog"
               title="Programmatique"
-              subtitle="DV360 · Display & Vidéo"
+              subtitle={wave.progSubtitle}
               present={present.dv360}
               block={data?.dv360}
               simple
             >
-              <ProgLines adSets={data?.dv360?.adSets} />
+              <ProgLines adSets={data?.dv360?.adSets} lines={wave.progLines} />
             </PlatformSection>
 
             {/* /04 Lecture rapide */}
